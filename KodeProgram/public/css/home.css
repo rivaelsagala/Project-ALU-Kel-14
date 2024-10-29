@@ -1,0 +1,27 @@
+body {
+    background-color: #f0f4f8; /* Warna latar belakang yang lembut */
+    font-family: 'Arial', sans-serif; /* Font modern */
+}
+
+.container {
+    border-radius: 10px; /* Sudut bulat pada kontainer */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Bayangan halus */
+    padding: 30px; /* Ruang dalam kontainer */
+    background-color: white; /* Latar belakang putih untuk kontainer */
+}
+
+h1 {
+    color: #343a40; /* Warna teks untuk judul */
+}
+
+h3 {
+    color: #6c757d; /* Warna teks untuk subjudul */
+}
+
+.btn {
+    transition: background-color 0.3s ease; /* Efek transisi saat hover */
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Warna latar belakang saat hover */
+}
