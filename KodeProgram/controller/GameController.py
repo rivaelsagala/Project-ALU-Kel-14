@@ -147,57 +147,6 @@ class GameController:
 
 
 
-    
-
-    # @staticmethod
-    # def process_image2():
-    #     if 'file' not in request.files:
-    #         return redirect('/home')
-
-    #     file = request.files['file']
-    #     if file.filename == '':
-    #         return redirect('/home')
-
-    #     # Buat direktori jika belum ada
-    #     os.makedirs(GameController.UPLOAD_FOLDER, exist_ok=True)
-    #     os.makedirs(GameController.PIECES_FOLDER, exist_ok=True)
-
-    #     # Simpan file
-    #     filename = secure_filename(file.filename)
-    #     filepath = os.path.join(GameController.UPLOAD_FOLDER, filename)
-    #     file.save(filepath)
-
-    #     # Proses gambar menjadi puzzle untuk level 2
-    #     img = Image.open(filepath)
-    #     img = img.resize((300, 300))  # Resize untuk konsistensi
-
-    #     # Pecah gambar menjadi 16 bagian (4x4)
-    #     pieces_level2 = []
-    #     width = img.width // 4  # Untuk 4 bagian secara horizontal
-    #     height = img.height // 4  # Untuk 4 bagian secara vertikal
-
-    #     for i in range(4):  # 4 baris
-    #         for j in range(4):  # 4 kolom
-    #             left = j * width
-    #             upper = i * height
-    #             right = left + width
-    #             lower = upper + height
-                
-    #             piece = img.crop((left, upper, right, lower))
-    #             piece_path = f'piece_{i}_{j}.png'
-    #             full_path = os.path.join(GameController.PIECES_FOLDER, piece_path)
-    #             piece.save(full_path)
-    #             pieces_level2.append((i * 4 + j, f'/static/pieces/{piece_path}'))
-
-    #     # Acak posisi pieces untuk level 2
-    #     random.shuffle(pieces_level2)
-
-    #     # Simpan state puzzle untuk level 2
-    #     session['puzzle_state_level2'] = [piece[0] for piece in pieces_level2]
-    #     session['piece_paths_level2'] = [piece[1] for piece in pieces_level2]
-
-    #     # Redirect ke halaman level selection
-    #     return redirect(url_for('web.level'))
 
 
 

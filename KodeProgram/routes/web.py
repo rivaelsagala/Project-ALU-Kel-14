@@ -29,6 +29,10 @@ def level1():
 def check_puzzle1():
     return GameController.check_puzzle_state1()
 
+@web.route('/level1/complete')
+def level1_complete():
+    return GameController.level1_complete()
+
 @web.route('/level2')
 def level2():
     return GameController.level2()
