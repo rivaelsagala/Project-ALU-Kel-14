@@ -4,7 +4,6 @@ from PIL import Image
 import numpy as np
 import random
 from werkzeug.utils import secure_filename
-from controller.PuzzleSolver import PuzzleSolver
 
 class GameController:
     UPLOAD_FOLDER = 'static/uploads'
@@ -18,61 +17,6 @@ class GameController:
     @staticmethod
     def home():
         return render_template('home.html')
-    
-
-    # @staticmethod
-    # def process_image1():
-    #     if 'file' not in request.files:
-    #         return redirect('/home')
-            
-    #     file = request.files['file']
-    #     if file.filename == '':
-    #         return redirect('/home')
-            
-    #     # Buat direktori jika belum ada
-    #     os.makedirs(GameController.UPLOAD_FOLDER, exist_ok=True)
-    #     os.makedirs(GameController.PIECES_FOLDER, exist_ok=True)
-        
-    #     # Simpan file
-    #     filename = secure_filename(file.filename)
-    #     filepath = os.path.join(GameController.UPLOAD_FOLDER, filename)
-    #     file.save(filepath)
-        
-    #     # Proses gambar menjadi puzzle untuk level 1
-    #     img = Image.open(filepath)
-    #     img = img.resize((300, 300))  # Resize untuk konsistensi
-        
-    #     # Pecah gambar menjadi 9 bagian (3x3)
-    #     pieces_level1 = []
-    #     width = img.width // GameController.PUZZLE_SIZE
-    #     height = img.height // GameController.PUZZLE_SIZE
-        
-    #     for i in range(GameController.PUZZLE_SIZE):
-    #         for j in range(GameController.PUZZLE_SIZE):
-    #             left = j * width
-    #             upper = i * height
-    #             right = left + width
-    #             lower = upper + height
-                
-    #             piece = img.crop((left, upper, right, lower))
-    #             piece_path = f'piece_{i}_{j}.png'
-    #             full_path = os.path.join(GameController.PIECES_FOLDER, piece_path)
-    #             piece.save(full_path)
-    #             pieces_level1.append((i * GameController.PUZZLE_SIZE + j, f'/static/pieces/{piece_path}'))
-        
-    #     # Acak posisi pieces untuk level 1
-    #     random.shuffle(pieces_level1)
-        
-    #     # Simpan state puzzle untuk level 1
-    #     session['puzzle_state'] = [piece[0] for piece in pieces_level1]
-    #     session['piece_paths'] = [piece[1] for piece in pieces_level1]
-        
-    #     # Redirect ke halaman level selection
-    #     return redirect(url_for('web.level'))
-    
-
-
-
 
     @staticmethod
     def process_image():
@@ -83,18 +27,15 @@ class GameController:
         if file.filename == '':
             return redirect('/home')
             
-        # Create directories if they don't exist
         os.makedirs(GameController.UPLOAD_FOLDER, exist_ok=True)
         os.makedirs(GameController.PIECES_FOLDER, exist_ok=True)
-        
-        # Save the uploaded file
+
         filename = secure_filename(file.filename)
         filepath = os.path.join(GameController.UPLOAD_FOLDER, filename)
         file.save(filepath)
         
-        # Process the image
         img = Image.open(filepath)
-        img = img.resize((300, 300))  # Resize for consistency
+        img = img.resize((300, 300)) 
 
         # Process for level 1 (3x3)
         pieces_level1 = []
@@ -114,7 +55,7 @@ class GameController:
                 piece.save(full_path)
                 pieces_level1.append((i * 3 + j, f'/static/pieces/{piece_path}'))
         
-        # Shuffle and save state for level 1
+
         random.shuffle(pieces_level1)
         session['puzzle_state'] = [piece[0] for piece in pieces_level1]
         session['piece_paths'] = [piece[1] for piece in pieces_level1]
@@ -137,12 +78,12 @@ class GameController:
                 piece.save(full_path)
                 pieces_level2.append((i * 4 + j, f'/static/pieces/{piece_path}'))
         
-        # Shuffle and save state for level 2
+       
         random.shuffle(pieces_level2)
         session['puzzle_state_level2'] = [piece[0] for piece in pieces_level2]
         session['piece_paths_level2'] = [piece[1] for piece in pieces_level2]
         
-        # Redirect to level selection page
+  
         return redirect(url_for('web.level'))
 
 
@@ -159,19 +100,16 @@ class GameController:
     
 
 # LEVEL 1
-
     @staticmethod
     def level1():
         piece_paths = session.get('piece_paths')
         if not piece_paths:
             return redirect(url_for('web.home'))
         return render_template('level1.html', pieces=piece_paths, size=GameController.PUZZLE_SIZE)
-
     @staticmethod
     def level1_complete():
         session['level1_completed'] = True
         return render_template('level1_complete.html')
-
     @staticmethod
     def check_puzzle_state1():
         if not request.is_json:
@@ -211,7 +149,6 @@ class GameController:
                 target_col = target_pos % size
                 distance += abs(current_row - target_row) + abs(current_col - target_col)
             return distance
-        
         if manhattan_distance(current_state) == 0:
             return jsonify({'solved': True})
         return jsonify({'solved': False})
@@ -227,14 +164,10 @@ class GameController:
         if not piece_paths:
             return redirect(url_for('web.home'))
         return render_template('level2.html', pieces=piece_paths, size=4) 
-
-
     @staticmethod
     def level2_complete():
         session['level2_completed'] = True
         return render_template('level2_complete.html')
-
-
     @staticmethod
     def check_puzzle_state2():
         if not request.is_json:
@@ -262,7 +195,6 @@ class GameController:
         
         # Target state untuk puzzle 4x4
         target_state = list(range(16))
-        
         def manhattan_distance(state):
             distance = 0
             size = 4
@@ -274,7 +206,6 @@ class GameController:
                 target_col = target_pos % size
                 distance += abs(current_row - target_row) + abs(current_col - target_col)
             return distance
-        
         if manhattan_distance(current_state) == 0:
             return jsonify({'solved': True})
         return jsonify({'solved': False})
