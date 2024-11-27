@@ -110,6 +110,8 @@ class GameController:
     def level1_complete():
         session['level1_completed'] = True
         return render_template('level1_complete.html')
+    
+    
     @staticmethod
     def check_puzzle_state1():
         if not request.is_json:
@@ -168,6 +170,7 @@ class GameController:
     def level2_complete():
         session['level2_completed'] = True
         return render_template('level2_complete.html')
+    
     @staticmethod
     def check_puzzle_state2():
         if not request.is_json:

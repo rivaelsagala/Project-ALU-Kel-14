@@ -185,19 +185,15 @@
             const targetElement = event.target.closest('.puzzle-piece');
 
             if (draggedElement && targetElement && draggedElement !== targetElement) {
-                // Tukar posisi
                 const tempContent = draggedElement.innerHTML;
                 draggedElement.innerHTML = targetElement.innerHTML;
                 targetElement.innerHTML = tempContent;
 
-                // Reset opacity
                 draggedElement.style.opacity = '1';
                 targetElement.style.opacity = '1';
 
-                // Reset draggedElement
                 draggedElement = null;
 
-                // Check otomatis setelah swap
                 checkOtomatis();
             }
         }
