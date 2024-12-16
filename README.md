@@ -1,1 +1,3 @@
-# Project-ALU-Kel-14
+# Development of a Web-Based Puzzle Game Application with Integrated Image Processing Using the Backtracking Algorithm
+
+This project aims to develop a web-based puzzle game application integrated with image processing using the backtracking algorithm. The application allows users to arrange puzzle pieces based on the correct sequence from uploaded photos. Equipped with features such as step-by-step guidance, result validation, and feedback, the application is designed to enhance users' pattern recognition, logical thinking, and strategic skills. Developed using Python and Visual Studio Code on the Windows 11 operating system, this project integrates a web-based interface design and algorithms to provide an interactive and educational user experience.
