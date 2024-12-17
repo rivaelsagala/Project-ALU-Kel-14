@@ -1,0 +1,17 @@
+body {
+    background-color: #f8f9fa; /* Warna latar belakang yang lembut */
+}
+
+h1 {
+    font-weight: bold;
+    color: #343a40; /* Warna teks yang lebih gelap */
+}
+
+h3 {
+    color: #6c757d; /* Warna teks yang lebih lembut */
+}
+
+.btn-primary {
+    padding: 10px 20px; /* Ukuran padding untuk tombol */
+    font-size: 1.2rem; /* Ukuran font yang lebih besar */
+}

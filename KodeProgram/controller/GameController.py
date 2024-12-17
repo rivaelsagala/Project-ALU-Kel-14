@@ -1,7 +1,6 @@
 from flask import render_template, request, redirect, url_for, jsonify, session
 import os
 from PIL import Image
-import numpy as np
 import random
 from werkzeug.utils import secure_filename
 
@@ -26,6 +25,10 @@ class GameController:
         file = request.files['file']
         if file.filename == '':
             return redirect('/home')
+        
+        # Validasi apakah file adalah gambar
+        if not file.filename.lower().endswith(('png', 'jpg', 'jpeg')):
+            return jsonify({'error': 'File is not an image'}), 400
             
         os.makedirs(GameController.UPLOAD_FOLDER, exist_ok=True)
         os.makedirs(GameController.PIECES_FOLDER, exist_ok=True)
@@ -35,9 +38,9 @@ class GameController:
         file.save(filepath)
         
         img = Image.open(filepath)
-        img = img.resize((300, 300)) 
+        img = img.resize((300, 300))  # Ukuran gambar untuk puzzle
 
-        # Process for level 1 (3x3)
+        # Proses untuk level 1 (3x3)
         pieces_level1 = []
         width_level1 = img.width // 3
         height_level1 = img.height // 3
@@ -54,13 +57,12 @@ class GameController:
                 full_path = os.path.join(GameController.PIECES_FOLDER, piece_path)
                 piece.save(full_path)
                 pieces_level1.append((i * 3 + j, f'/static/pieces/{piece_path}'))
-        
 
         random.shuffle(pieces_level1)
         session['puzzle_state'] = [piece[0] for piece in pieces_level1]
         session['piece_paths'] = [piece[1] for piece in pieces_level1]
 
-        # Process for level 2 (4x4)
+        # Proses untuk level 2 (4x4)
         pieces_level2 = []
         width_level2 = img.width // 4
         height_level2 = img.height // 4
@@ -77,41 +79,31 @@ class GameController:
                 full_path = os.path.join(GameController.PIECES_FOLDER, piece_path)
                 piece.save(full_path)
                 pieces_level2.append((i * 4 + j, f'/static/pieces/{piece_path}'))
-        
-       
+
         random.shuffle(pieces_level2)
         session['puzzle_state_level2'] = [piece[0] for piece in pieces_level2]
         session['piece_paths_level2'] = [piece[1] for piece in pieces_level2]
         
-  
         return redirect(url_for('web.level'))
-
-
-
-
-
-
-
 
     @staticmethod
     def level():
         level1_completed = session.get('level1_completed', False)
         return render_template('level.html', level1_completed=level1_completed)
     
-
-# LEVEL 1
+    # LEVEL 1
     @staticmethod
     def level1():
         piece_paths = session.get('piece_paths')
         if not piece_paths:
             return redirect(url_for('web.home'))
         return render_template('level1.html', pieces=piece_paths, size=GameController.PUZZLE_SIZE)
+
     @staticmethod
     def level1_complete():
         session['level1_completed'] = True
         return render_template('level1_complete.html')
-    
-    
+
     @staticmethod
     def check_puzzle_state1():
         if not request.is_json:
@@ -126,11 +118,10 @@ class GameController:
         # Ekstrak nomor urutan dari path gambar
         for piece in pieces:
             try:
-                # Split nama file sesuai format 'piece1_row_col.png'
                 parts = piece.split('/')[-1].replace('piece1_', '').replace('.png', '').split('_')
                 if len(parts) == 2:
                     row, col = map(int, parts)
-                    index = row * 3 + col  # Menghitung indeks berdasarkan posisi baris dan kolom
+                    index = row * 3 + col
                     current_state.append(index)
                 else:
                     return jsonify({'error': 'Invalid piece format'}), 400
@@ -139,7 +130,7 @@ class GameController:
         
         # Target state untuk puzzle 3x3
         target_state = list(range(9))
-        
+
         def manhattan_distance(state):
             distance = 0
             size = 3
@@ -151,26 +142,24 @@ class GameController:
                 target_col = target_pos % size
                 distance += abs(current_row - target_row) + abs(current_col - target_col)
             return distance
+
         if manhattan_distance(current_state) == 0:
             return jsonify({'solved': True})
         return jsonify({'solved': False})
-    
 
-
-
-# LEVEL 2
-
+    # LEVEL 2
     @staticmethod
     def level2():
         piece_paths = session.get('piece_paths_level2')
         if not piece_paths:
             return redirect(url_for('web.home'))
-        return render_template('level2.html', pieces=piece_paths, size=4) 
+        return render_template('level2.html', pieces=piece_paths, size=4)
+
     @staticmethod
     def level2_complete():
         session['level2_completed'] = True
         return render_template('level2_complete.html')
-    
+
     @staticmethod
     def check_puzzle_state2():
         if not request.is_json:
@@ -185,11 +174,10 @@ class GameController:
         # Ekstrak nomor urutan dari path gambar
         for piece in pieces:
             try:
-                # Split nama file sesuai format 'piece2_row_col.png'
                 parts = piece.split('/')[-1].replace('piece2_', '').replace('.png', '').split('_')
                 if len(parts) == 2:
                     row, col = map(int, parts)
-                    index = row * 4 + col  # Menghitung indeks berdasarkan posisi baris dan kolom
+                    index = row * 4 + col
                     current_state.append(index)
                 else:
                     return jsonify({'error': 'Invalid piece format'}), 400
@@ -198,6 +186,7 @@ class GameController:
         
         # Target state untuk puzzle 4x4
         target_state = list(range(16))
+
         def manhattan_distance(state):
             distance = 0
             size = 4
@@ -209,7 +198,7 @@ class GameController:
                 target_col = target_pos % size
                 distance += abs(current_row - target_row) + abs(current_col - target_col)
             return distance
+
         if manhattan_distance(current_state) == 0:
             return jsonify({'solved': True})
         return jsonify({'solved': False})
-    
