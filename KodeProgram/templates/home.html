@@ -1,86 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <style>
-      /* Atur background color dan tata letak teks di tengah halaman */
-      body {
-        background-color: #4592ae; /* Warna navy */
-        color: #f5f5f5;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh; /* Tinggi viewport */
-        margin: 0;
-      }
 
-      /* Style untuk judul utama */
-      h1 {
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Input Gambar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #4592ae;
+      color: #333;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-      /* Style untuk judul kecil */
-      h3 {
-        color: #b3d6e5;
-        font-weight: lighter;
-      }
+    /* Container styling */
+    .custom-card {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+    }
 
-      /* Button styling */
-      .btn-primary {
-        background-color: #0073e6;
-        border-color: #005bb5;
-      }
+    /* Input file button styling */
+    .file-input-wrapper {
+      position: relative;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-      .btn-primary:hover {
-        background-color: #005bb5;
-        border-color: #00408f;
-      }
+    .file-input-label {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: #0073e6;
+      color: white;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-      /* Tambahkan gaya untuk input file */
-      .form-control {
-        border-radius: 0.5rem;
-      }
+    .file-input-label i {
+      margin-right: 10px;
+    }
 
-      .input-group-text {
-        background-color: #005bb5;
-        color: #fff;
-      }
+    .file-input-label:hover {
+      background-color: #005bb5;
+      transform: scale(1.05);
+    }
 
-      .input-group-text:hover {
-        background-color: #00408f;
-      }
-    </style>
-  </head>
+    /* Hide the default input */
+    .file-input {
+      display: none;
+    }
 
-  <body>
-    <div class="container text-center">
-      <h1 class="display-4">LUCK PUZZLE</h1>
-      <h3 class="text-muted mb-4">Input Gambar</h3>
+    /* Display file name */
+    .file-name {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #0073e6;
+    }
 
+    /* Start button styling */
+    .btn-start {
+      background-color: #0073e6;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-start:hover {
+      background-color: #005bb5;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container text-center">
+    <div class="custom-card">
+      <h2 class="mb-4 fw-bold text-dark">Upload Gambar</h2>
       <form action="{{ url_for('web.upload') }}" method="post" enctype="multipart/form-data">
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <div class="input-group mb-3">
-              <input type="file" class="form-control" name="file" id="inputGroupFile02" />
-              <label class="input-group-text" for="inputGroupFile02">Upload</label>
-            </div>
-          </div>
+        <!-- Input Gambar -->
+        <div class="file-input-wrapper">
+          <label for="file-input" class="file-input-label">
+            <i class="bi bi-upload"></i> Pilih Gambar
+          </label>
+          <input type="file" id="file-input" name="file" class="file-input" onchange="displayFileName()" />
+          <div id="file-name" class="file-name"></div>
         </div>
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <button type="submit" class="btn btn-primary btn-lg">Start</button>
-          </div>
-        </div>
+
+        <!-- Tombol Start -->
+        <button type="submit" class="btn btn-start">
+          <i class="bi bi-play-fill"></i> Start
+        </button>
       </form>
     </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Qc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-  </body>
+  <script>
+    // Menampilkan nama file yang dipilih
+    function displayFileName() {
+      const input = document.getElementById("file-input");
+      const fileName = input.files.length > 0 ? input.files[0].name : "";
+      document.getElementById("file-name").innerText = fileName;
+    }
+  </script>
+</body>
+
 </html>
