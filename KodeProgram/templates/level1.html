@@ -1,251 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Puzzle Game</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/css/level1.css" />
-    <style>
-      body {
-        margin: 0;
-        font-family: Arial, sans-serif;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Puzzle Game</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/level1.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .background-custom {
+      background-color: #81c7f9;
+      /* Default warna latar */
+      background-image: url("templates/background.jpg");
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+
+    .navbar {
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .container {
+      text-align: center;
+      margin-top: -40px;
+      /* Menaikkan konten lebih tinggi */
+      background-image: url(../static/images/background.png);
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .container h1 {
+      margin-top: -30px;
+      /* Menyesuaikan judul untuk naik lebih tinggi */
+    }
+
+    .timer {
+      color: white;
+      font-size: 24px;
+      padding: 10px;
+      text-align: center;
+      margin: 0 auto;
+    }
+
+    .timer.animate {
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
       }
 
-      /* Tambahkan class untuk background yang dapat diatur warnanya */
-      .background-custom {
-        background-color: #81c7f9; /* Default warna latar */
-        min-height: 100vh;
-        padding: 0;
-        margin: 0;
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
       }
 
-      .puzzle-piece img {
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        /* Mencegah img menjadi target drag */
+      50% {
+        transform: scale(1.1);
       }
+    }
+  </style>
+</head>
 
-      .navbar {
-        background-color: #333;
-        overflow: hidden;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-      }
-
-      .navbar-logo {
-        display: flex;
-        align-items: center;
-      }
-
-      .navbar-logo img {
-        width: 40px;
-        height: 40px;
-        margin-right: 10px;
-      }
-
-      .navbar-icons {
-        display: flex;
-        align-items: center;
-      }
-
-      .navbar-icons a {
-        margin-left: 20px;
-        position: relative;
-      }
-
-      .navbar-icons i {
-        font-size: 24px;
-        color: white;
-      }
-
-      .timer {
-        color: white;
-        font-size: 24px;
-        padding: 10px;
-        text-align: center;
-        margin: 0 auto;
-      }
-
-      .timer.animate {
-        animation: pulse 1s infinite;
-      }
-
-      /* Animasi berputar untuk ikon pengaturan */
-      .fa-cog {
-        animation: spin 2s linear infinite;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      /* Animasi untuk ikon musik saat diputar */
-      .fa-music.playing {
-        animation: pulse 1s infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          transform: scale(1);
-        }
-
-        50% {
-          transform: scale(1.1);
-        }
-      }
-    </style>
-  </head>
-
-  <body class="background-custom">
-    <div class="navbar">
-      <div class="navbar-logo">
-        <img src="https://via.placeholder.com/40" alt="Logo" />
-        <span>Game Logo</span>
-      </div>
-      <div class="timer" id="timer">00:30</div>
-      <div class="navbar-icons">
-        <a href="#" id="music-button"><i class="fas fa-music"></i></a>
-        <a href="#"><i class="fas fa-puzzle-piece"></i></a>
-        <a href="#"><i class="fas fa-cog"></i></a>
-        <a href="#"><i class="fas fa-home"></i></a>
-      </div>
+<body class="background-custom">
+  <div class="navbar">
+    <div class="navbar-logo">
+      <img src="../static/images/logo.jpg" alt="Logo" style="height: 100px; width: 100px" />
     </div>
+    <div class="timer" id="timer">01:00</div>
+    <div class="navbar-icons">
+      <a href="#" id="music-button"><i class="fas fa-music"></i></a>
+      <a href="#"><i class="fas fa-puzzle-piece"></i></a>
+      <a href="#"><i class="fas fa-cog"></i></a>
+      <a href="#"><i class="fas fa-home"></i></a>
+    </div>
+  </div>
 
-    <div class="container text-center mt-5">
-      <h1>Puzzle Game</h1>
+  <div class="container text-center mt-5"
+    style="background-image: url(../static/images/backgroun-putih.jpg); background-repeat: no-repeat; background-size: cover; border-radius: 3%">
+    <h1>Puzzle Game</h1>
 
-      <div class="puzzle-container" id="puzzleContainer">
-        {% for piece in pieces %}
-        <div class="puzzle-piece" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" ondrop="drop(event)" ondragover="allowDrop(event)">
-          <img src="{{ piece }}" width="100%" height="100%" />
-        </div>
-        {% endfor %}
+    <div class="puzzle-container" id="puzzleContainer">
+      {% for piece in pieces %}
+      <div class="puzzle-piece" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"
+        ondrop="drop(event)" ondragover="allowDrop(event)">
+        <img src="{{ piece }}" width="100%" height="100%" />
       </div>
+      {% endfor %}
+    </div>
+    <div class="section" style="padding-bottom: 40px">
       <button class="btn btn-primary mt-3" onclick="checkWin()">Solve with Backtracking</button>
       <a href="/level" class="btn btn-secondary mt-3">Back to Home</a>
     </div>
+  </div>
 
-    <script>
-      let draggedElement = null;
+  <script>
+    let draggedElement = null;
 
-      function dragStart(event) {
-        draggedElement = event.target.closest(".puzzle-piece");
-        draggedElement.classList.add("dragging");
+    function dragStart(event) {
+      draggedElement = event.target.closest(".puzzle-piece");
+      draggedElement.classList.add("dragging");
 
-        setTimeout(() => {
-          draggedElement.style.opacity = "0.01";
-        }, 0);
+      setTimeout(() => {
+        draggedElement.style.opacity = "0.01";
+      }, 0);
 
-        event.dataTransfer.effectAllowed = "move";
-      }
+      event.dataTransfer.effectAllowed = "move";
+    }
 
-      function dragEnd(event) {
-        draggedElement.classList.remove("dragging");
+    function dragEnd(event) {
+      draggedElement.classList.remove("dragging");
+      draggedElement.style.opacity = "1";
+      draggedElement = null;
+    }
+
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      const targetElement = event.target.closest(".puzzle-piece");
+
+      if (draggedElement && targetElement && draggedElement !== targetElement) {
+        const tempContent = draggedElement.innerHTML;
+        draggedElement.innerHTML = targetElement.innerHTML;
+        targetElement.innerHTML = tempContent;
+
         draggedElement.style.opacity = "1";
+        targetElement.style.opacity = "1";
+
         draggedElement = null;
+
+        checkOtomatis();
       }
+    }
 
-      function allowDrop(event) {
-        event.preventDefault();
-      }
-
-      function drop(event) {
-        event.preventDefault();
-        const targetElement = event.target.closest(".puzzle-piece");
-
-        if (draggedElement && targetElement && draggedElement !== targetElement) {
-          const tempContent = draggedElement.innerHTML;
-          draggedElement.innerHTML = targetElement.innerHTML;
-          targetElement.innerHTML = tempContent;
-
-          draggedElement.style.opacity = "1";
-          targetElement.style.opacity = "1";
-
-          draggedElement = null;
-
-          checkOtomatis();
-        }
-      }
-
-      async function checkWin() {
-        const pieces = Array.from(document.querySelectorAll(".puzzle-piece img")).map((img) => img.getAttribute("src"));
-        try {
-          const response = await fetch("/check-puzzle1", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ pieces: pieces }),
-          });
-          const result = await response.json();
-          if (result.solved) {
-            window.location.href = "/level1/complete";
-          } else {
-            alert("Gambar masih salah");
-          }
-        } catch (error) {
-          console.error("Error during checkWin:", error);
-        }
-      }
-
-      async function checkOtomatis() {
-        const pieces = Array.from(document.querySelectorAll(".puzzle-piece img")).map((img) => img.getAttribute("src"));
-        try {
-          const response = await fetch("/check-puzzle1", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ pieces: pieces }),
-          });
-          const result = await response.json();
-          if (result.solved) {
-            window.location.href = "/level1/complete";
-          }
-        } catch (error) {
-          console.error("Error during checkWin:", error);
-        }
-      }
-
-      let timerElement = document.getElementById("timer");
-      let timer = 3600;
-      let musicButton = document.getElementById("music-button");
-      let isPlaying = false;
-
-      function updateTimer() {
-        let minutes = Math.floor(timer / 60);
-        let seconds = timer % 60;
-        timerElement.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-        timer--;
-        if (timer < 10) {
-          timerElement.classList.add("animate");
-        }
-        if (timer < 0) {
-          clearInterval(timerInterval);
-          alert("Time's up!");
-        }
-      }
-
-      musicButton.addEventListener("click", function () {
-        if (isPlaying) {
-          music.pause();
-          musicButton.querySelector("i").classList.remove("playing");
-          isPlaying = false;
+    async function checkWin() {
+      const pieces = Array.from(document.querySelectorAll(".puzzle-piece img")).map((img) => img.getAttribute("src"));
+      try {
+        const response = await fetch("/check-puzzle1", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pieces: pieces }),
+        });
+        const result = await response.json();
+        if (result.solved) {
+          window.location.href = "/level1/complete";
         } else {
-          music.play();
-          musicButton.querySelector("i").classList.add("playing");
-          isPlaying = true;
+          alert("Gambar masih salah");
         }
-      });
+      } catch (error) {
+        console.error("Error during checkWin:", error);
+      }
+    }
 
-      let timerInterval = setInterval(updateTimer, 1000);
-    </script>
-  </body>
+    async function checkOtomatis() {
+      const pieces = Array.from(document.querySelectorAll(".puzzle-piece img")).map((img) => img.getAttribute("src"));
+      try {
+        const response = await fetch("/check-puzzle1", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pieces: pieces }),
+        });
+        const result = await response.json();
+        if (result.solved) {
+          window.location.href = "/level1/complete";
+        }
+      } catch (error) {
+        console.error("Error during checkWin:", error);
+      }
+    }
+
+    let timerElement = document.getElementById("timer");
+    let timer = 60; // Timer set to 1 minute (60 seconds)
+    let musicButton = document.getElementById("music-button");
+    let isPlaying = false;
+
+    function updateTimer() {
+      let minutes = Math.floor(timer / 60);
+      let seconds = timer % 60;
+      timerElement.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      timer--;
+      if (timer < 10) {
+        timerElement.classList.add("animate");
+      }
+      if (timer < 0) {
+        clearInterval(timerInterval);
+        alert("Time's up!");
+      }
+    }
+
+    musicButton.addEventListener("click", function () {
+      if (isPlaying) {
+        music.pause();
+        musicButton.querySelector("i").classList.remove("playing");
+        isPlaying = false;
+      } else {
+        music.play();
+        musicButton.querySelector("i").classList.add("playing");
+        isPlaying = true;
+      }
+    });
+
+    let timerInterval = setInterval(updateTimer, 1000); // Update every second
+  </script>
+</body>
+
 </html>

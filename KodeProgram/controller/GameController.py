@@ -131,21 +131,46 @@ class GameController:
         # Target state untuk puzzle 3x3
         target_state = list(range(9))
 
-        def manhattan_distance(state):
-            distance = 0
-            size = 3
-            for i in range(len(state)):
-                current_row = i // size
-                current_col = i % size
-                target_pos = state[i]
-                target_row = target_pos // size
-                target_col = target_pos % size
-                distance += abs(current_row - target_row) + abs(current_col - target_col)
-            return distance
+        def is_solved(state):
+            return state == target_state
 
-        if manhattan_distance(current_state) == 0:
+        def get_possible_moves(state):
+            moves = []
+            for i in range(len(state)):
+                for j in range(i + 1, len(state)):
+                    new_state = state.copy()
+                    new_state[i], new_state[j] = new_state[j], new_state[i]
+                    moves.append(new_state)
+            return moves
+
+        def solve_backtracking(state, visited, depth=0):
+            if depth > 10:  # Batasi kedalaman pencarian
+                return False
+            
+            if is_solved(state):
+                return True
+                
+            state_tuple = tuple(state)
+            if state_tuple in visited:
+                return False
+                
+            visited.add(state_tuple)
+            
+            possible_moves = get_possible_moves(state)
+            for new_state in possible_moves:
+                if solve_backtracking(new_state, visited, depth + 1):
+                    return True
+            
+            return False
+
+        # Cek apakah puzzle bisa diselesaikan
+        visited = set()
+        if is_solved(current_state):
             return jsonify({'solved': True})
-        return jsonify({'solved': False})
+        elif solve_backtracking(current_state, visited):
+            return jsonify({'solved': False, 'solvable': True})
+        else:
+            return jsonify({'solved': False, 'solvable': False})
 
     # LEVEL 2
     @staticmethod
@@ -187,7 +212,7 @@ class GameController:
         # Target state untuk puzzle 4x4
         target_state = list(range(16))
 
-        def manhattan_distance(state):
+        def solve(state):
             distance = 0
             size = 4
             for i in range(len(state)):
@@ -199,6 +224,10 @@ class GameController:
                 distance += abs(current_row - target_row) + abs(current_col - target_col)
             return distance
 
-        if manhattan_distance(current_state) == 0:
+        if solve(current_state) == 0:
             return jsonify({'solved': True})
         return jsonify({'solved': False})
+
+
+
+
